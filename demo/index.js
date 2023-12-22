@@ -6,6 +6,7 @@ import { chainExample } from './example-chain.js';
 import { lazyTongsExample } from './example-lazy-tongs.js';
 import { perspectiveExample } from './example-perspective.js';
 import { pythagorasExample } from './example-pythagoras.js';
+import { bridgeExample } from './example-bridge.js';
 
 const examples = {};
 examples['clear'] = () => {};
@@ -14,6 +15,7 @@ examples['chain'] = chainExample;
 examples['lazy tongs'] = lazyTongsExample;
 examples['perspective'] = perspectiveExample;
 examples['pythagoras'] = pythagorasExample;
+examples['bridge'] = bridgeExample;
 
 function setupActions(rc) {
   const actions = document.getElementsByTagName('action');
