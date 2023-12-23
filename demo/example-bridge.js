@@ -24,6 +24,8 @@ const points = [
     {x: 404, y: 73}
 ];
 
+const weightPosition = {x: 343, y: 150};
+
 const triangles = [
     [0,5,6],
     [0,6,1],
@@ -76,10 +78,16 @@ export function bridgeExample(rc) {
 
     rc.addConstraint(new Relax.geom.CoordinateConstraint(ps[11], points[11]));
     rc.addConstraint(new Relax.geom.CoordinateConstraint(ps[16], points[16]));
-    const weight = new Relax.geom.WeightConstraint(ps[10], 10);
+
+    const wp = rc.addPoint(weightPosition.x, weightPosition.y);
+    rc.addLine(wp, ps[10]);
+    rc.addConstraint(new Relax.geom.LengthConstraint(wp, ps[10], 50));
+
+    const weight = new Relax.geom.WeightConstraint(wp, 10);
     rc.addConstraint(weight);
 
-    rc.backgroundColor = "#7d7d7d";
+    rc.backgroundColor = "#4d4d4d";
+    rc.displayFlicker = true;
     if (!document.body.querySelector("#weightSlider")) {
         const slider = document.createElement("input");
         slider.setAttribute("type", "range");

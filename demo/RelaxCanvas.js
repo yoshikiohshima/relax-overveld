@@ -21,6 +21,8 @@ export class RelaxCanvas {
     this.showConstraints = false;
     this.showEachIteration = false;
     this.showSomeIteration = null;
+    this.displayFlicker = false;
+
     this.iterationsPerFrame = 0;
     this.paused = false;
     this.points = [];
@@ -341,9 +343,17 @@ export class RelaxCanvas {
   //---------------------------------------------------------------------------
 
   drawPoint(p) {
-    this.ctxt.fillStyle = p.isSelected ? 'yellow' : p.color;
+    let fillStyle = p.isSelected ? 'yellow' : p.color;
+    let radius = 8;
+    if (this.displayFlicker) {
+      const f = Math.random() * 0.4 + 0.5;
+      fillStyle = `rgba(${f * 255}, ${f * 255}, ${f * 255}, ${f})`;
+      radius = 2;
+    }
+        
+    this.ctxt.fillStyle = fillStyle;
     this.ctxt.beginPath();
-    this.ctxt.arc(p.x + this.offsetX, p.y + this.offsetY, 8, 0, 2 * Math.PI);
+    this.ctxt.arc(p.x + this.offsetX, p.y + this.offsetY, radius, 0, 2 * Math.PI);
     this.ctxt.closePath()
     this.ctxt.fill();
     if (p.selectionIndices.length > 0) {
@@ -365,10 +375,15 @@ export class RelaxCanvas {
   }
 
   drawLine(l) {
+    let strokeStyle = 'rgba(0,0,0,0.15)';
+    if (this.displayFlicker) {
+      const f = Math.random() * 0.4 + 0.5;
+      strokeStyle = `rgba(${f * 255}, ${f * 255}, ${f * 255}, ${f})`;
+    }
     this.ctxt.beginPath();
     this.ctxt.moveTo(l.p1.x + this.offsetX, l.p1.y + this.offsetY);
     this.ctxt.lineWidth = 3;
-    this.ctxt.strokeStyle = 'rgba(0,0,0,0.15)';
+    this.ctxt.strokeStyle = strokeStyle;
     this.ctxt.lineTo(l.p2.x + this.offsetX, l.p2.y + this.offsetY);
     this.ctxt.closePath();
     this.ctxt.stroke();
@@ -380,7 +395,7 @@ export class RelaxCanvas {
     this.lines.forEach(l => this.drawLine(l));
     this.points.forEach(p => this.drawPoint(p));
     this.relax.constraints.forEach(c => {
-      if (c.draw) {
+        if (c.draw) {
         c.draw(this, this);
       }
     });
@@ -417,6 +432,7 @@ export function perpendicularConstraint(p1, p2, p3, p4) {
 Relax.geom.CoordinateConstraint.prototype.draw = function(canvas, rc) {
   var ctxt = canvas.ctxt;
   if (this.p.isSelected) return; // don't draw over the selection highlight
+  if (canvas.displayFlicker) return; // don't draw when display flicker mode is used
   ctxt.fillStyle = 'black';
   ctxt.beginPath();
   ctxt.arc(this.c.x + canvas.offsetX, this.c.y + canvas.offsetY, 8 * 0.666, 0, 2 * Math.PI);
@@ -470,3 +486,14 @@ Relax.geom.LengthConstraint.prototype.draw = function(canvas, rc) {
   ctxt.strokeText(Math.round(this.l), textCenterX, textCenterY);
   ctxt.stroke();
 };
+
+Relax.geom.WeightConstraint.prototype.draw = function(canvas, rc) {
+  let ctxt = canvas.ctxt;
+  ctxt.fillStyle = 'white';
+  ctxt.beginPath();
+  ctxt.arc(this.p1.x + canvas.offsetX, this.p1.y + canvas.offsetY, 8 * 0.666, 0, 2 * Math.PI);
+  ctxt.closePath();
+  ctxt.fill();
+};
+
+
