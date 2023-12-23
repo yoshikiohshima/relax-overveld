@@ -76,4 +76,46 @@ export function bridgeExample(rc) {
 
     rc.addConstraint(new Relax.geom.CoordinateConstraint(ps[11], points[11]));
     rc.addConstraint(new Relax.geom.CoordinateConstraint(ps[16], points[16]));
+    const weight = new Relax.geom.WeightConstraint(ps[10], 10);
+    rc.addConstraint(weight);
+
+    window.rc = rc;
+    if (!document.body.querySelector("#weightSlider")) {
+        const slider = document.createElement("input");
+        slider.setAttribute("type", "range");
+        slider.id = "weightSlider";
+        document.body.appendChild(slider);
+        slider.min = 0;
+        slider.max = 20;
+        slider.value = "10";
+        slider.oninput = (evt) => {
+            weight.setWeight(parseFloat(evt.currentTarget.value));
+        }
+
+        slider.setAttribute("type", "range");
+        slider.id = "weightSlider";
+        document.body.appendChild(slider);
+        slider.min = 0;
+        slider.max = 20;
+        slider.value = "10";
+        slider.oninput = (evt) => {
+            weight.setWeight(parseFloat(evt.currentTarget.value));
+        };
+    }
+
+    if (!document.body.querySelector("#iterationSlider")) {
+        const slider = document.createElement("input");
+        slider.setAttribute("type", "range");
+        slider.id = "iterationSlider";
+        document.body.appendChild(slider);
+        slider.min = 0;
+        slider.max = 10;
+        slider.value = "3";
+        rc.showSomeIteration = 3;
+        slider.oninput = (evt) => {
+            rc.showSomeIteration = parseFloat(evt.currentTarget.value);
+        }
+    }
 }
+
+/* global window document */

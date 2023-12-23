@@ -321,6 +321,32 @@ class MotorConstraint {
         ];
     }
 }
+class WeightConstraint {
+    p1;
+    w;
+    lastT;
+    constructor(p1, w){
+        this.p1 = p1;
+        this.w = w;
+        this.lastT = Date.now();
+    }
+    involves(thing) {
+        return this.p1 === thing;
+    }
+    setWeight(w) {
+        this.w = w;
+    }
+    computeDeltas(timeMillis) {
+        (timeMillis - this.lastT) / 1000.0;
+        this.lastT = timeMillis;
+        return [
+            new PointDelta(this.p1, {
+                x: 0,
+                y: this.w
+            })
+        ];
+    }
+}
 const mod1 = {
     PointDelta: PointDelta,
     square: square,
@@ -339,7 +365,8 @@ const mod1 = {
     EqualDistanceConstraint: EqualDistanceConstraint,
     LengthConstraint: LengthConstraint,
     OrientationConstraint: OrientationConstraint,
-    MotorConstraint: MotorConstraint
+    MotorConstraint: MotorConstraint,
+    WeightConstraint: WeightConstraint
 };
 class Relax {
     rho = 0.25;

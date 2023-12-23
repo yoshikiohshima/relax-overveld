@@ -20,6 +20,7 @@ export class RelaxCanvas {
 
     this.showConstraints = false;
     this.showEachIteration = false;
+    this.showSomeIteration = null;
     this.iterationsPerFrame = 0;
     this.paused = false;
     this.points = [];
@@ -313,7 +314,12 @@ export class RelaxCanvas {
   step() {
     this.updateCoordinateConstraints();
     if (!this.paused) {
-      if (this.showEachIteration) {
+        if (this.showSomeIteration !== null) {
+        for (let i = 0; i < this.showSomeIteration; i++) {
+          this.relax.doOneIteration(Date.now());
+        }
+        this.iterationsPerFrame = this.showSomeIteration;
+      } else if (this.showEachIteration) {
         this.iterationsPerFrame = this.relax.doOneIteration(Date.now()) ? 1 : 0;
       } else {
         this.iterationsPerFrame = this.relax.iterateForUpToMillis(1000 / 65);

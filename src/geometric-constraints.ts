@@ -220,3 +220,27 @@ export class MotorConstraint implements Relax.Constraint {
 	        new PointDelta(this.p2, minus(rotatedAround(this.p2, dTheta, m12), this.p2))];
     }
 }
+
+// Weight constraint - causes P1 moves toward positive Y propotional to w
+export class WeightConstraint implements Relax.Constraint {
+    lastT = Date.now();
+
+    constructor(
+        public readonly p1: Point,
+        public w: number,
+    ) {}
+
+    involves(thing: unknown): boolean {
+        return this.p1 === thing;
+    }
+
+    setWeight(w: number) {
+        this.w = w;
+    }
+
+    computeDeltas(timeMillis: number): Array<Relax.Delta> {
+        const t = (timeMillis - this.lastT) / 1000.0; // t is time delta in *seconds*
+        this.lastT = timeMillis;
+        return [new PointDelta(this.p1, {x: 0, y: this.w})];
+    }
+}

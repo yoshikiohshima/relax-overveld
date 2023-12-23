@@ -60,8 +60,9 @@ function setupDemoButtons(rc) {
       rc.clear();
       examples[e](rc);
     };
-    demos.insertBefore(demo, demos.querySelector('demo:last-of-type'));
+      demos.insertBefore(demo, demos.querySelector('demo:last-of-type'));
   });
+    examples['bridge'](rc);
 }
 
 function createRelaxCanvas() {

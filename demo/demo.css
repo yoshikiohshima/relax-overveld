@@ -12,7 +12,6 @@ canvas {
 demos, actions {
   position: absolute;
   top: 0;
-  bottom: 0;
   z-index: 2000;
   overflow: auto;
 
@@ -111,8 +110,8 @@ showEachIterationButton {
   padding: 4pt;
   background: #eef;
   position: absolute;
-  bottom: 20px;
-  left: 45%;
+  bottom: 40px;
+  right: 10px;
   color: blue;
   display: none;
 }
@@ -133,3 +132,18 @@ iterationsPerFrame:after {
   content: ' iterations / frame';
 }
 
+#weightSlider {
+    position: absolute;
+    bottom: 70px;
+    right: 10px;
+    z-index: 5;
+    width: 100px;
+}
+
+#iterationSlider {
+    position: absolute;
+    bottom: 100px;
+    right: 10px;
+    z-index: 5;
+    width: 100px;
+}
