@@ -79,7 +79,7 @@ export function bridgeExample(rc) {
     const weight = new Relax.geom.WeightConstraint(ps[10], 10);
     rc.addConstraint(weight);
 
-    window.rc = rc;
+    rc.backgroundColor = "#7d7d7d";
     if (!document.body.querySelector("#weightSlider")) {
         const slider = document.createElement("input");
         slider.setAttribute("type", "range");
@@ -118,4 +118,4 @@ export function bridgeExample(rc) {
     }
 }
 
-/* global window document */
+/* global document */

@@ -375,7 +375,7 @@ export class RelaxCanvas {
   }
 
   redraw() {
-    this.ctxt.fillStyle = 'white';
+    this.ctxt.fillStyle = this.backgroundColor || 'white';
     this.ctxt.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.lines.forEach(l => this.drawLine(l));
     this.points.forEach(p => this.drawPoint(p));
