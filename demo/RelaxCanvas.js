@@ -441,50 +441,78 @@ Relax.geom.CoordinateConstraint.prototype.draw = function(canvas, rc) {
 };
 
 Relax.geom.LengthConstraint.prototype.draw = function(canvas, rc) {
-  var ctxt = canvas.ctxt;
-  if (!rc.showConstraints) return;
+  let ctxt = canvas.ctxt;
+  if (!rc.showConstraints && !rc.showDisplacement) return;
 
-  ctxt.lineWidth = 1;
-  ctxt.strokeStyle = 'yellow';
-  ctxt.beginPath();
+  if (rc.showConstraints) {
+    ctxt.lineWidth = 1;
+    ctxt.strokeStyle = 'yellow';
+    ctxt.beginPath();
 
-  var angle = Math.atan2(this.p2.y - this.p1.y, this.p2.x - this.p1.x);
-  var dist = 25;
-  var p1x = this.p1.x + canvas.offsetX - dist * Math.cos(angle + Math.PI / 2);
-  var p1y = this.p1.y + canvas.offsetY - dist * Math.sin(angle + Math.PI / 2);
-  var p2x = this.p2.x + canvas.offsetX - dist * Math.cos(angle + Math.PI / 2);
-  var p2y = this.p2.y + canvas.offsetY - dist * Math.sin(angle + Math.PI / 2);
+    let angle = Math.atan2(this.p2.y - this.p1.y, this.p2.x - this.p1.x);
+    let dist = 25;
+    let p1x = this.p1.x + canvas.offsetX - dist * Math.cos(angle + Math.PI / 2);
+    let p1y = this.p1.y + canvas.offsetY - dist * Math.sin(angle + Math.PI / 2);
+    let p2x = this.p2.x + canvas.offsetX - dist * Math.cos(angle + Math.PI / 2);
+    let p2y = this.p2.y + canvas.offsetY - dist * Math.sin(angle + Math.PI / 2);
 
-  var textCenterX = (p1x + p2x) / 2 - dist / 2 * Math.cos(angle + Math.PI / 2);
-  var textCenterY = (p1y + p2y) / 2 - dist / 2 * Math.sin(angle + Math.PI / 2);
+    let textCenterX = (p1x + p2x) / 2 - dist / 2 * Math.cos(angle + Math.PI / 2);
+    let textCenterY = (p1y + p2y) / 2 - dist / 2 * Math.sin(angle + Math.PI / 2);
 
-  ctxt.moveTo(
-    p1x + 5 * Math.cos(angle + Math.PI / 2),
-    p1y + 5 * Math.sin(angle + Math.PI / 2)
-  );
-  ctxt.lineTo(
-    p1x - 5 * Math.cos(angle + Math.PI / 2),
-    p1y - 5 * Math.sin(angle + Math.PI / 2)
-  );
+    ctxt.moveTo(
+      p1x + 5 * Math.cos(angle + Math.PI / 2),
+      p1y + 5 * Math.sin(angle + Math.PI / 2)
+    );
+    ctxt.lineTo(
+      p1x - 5 * Math.cos(angle + Math.PI / 2),
+      p1y - 5 * Math.sin(angle + Math.PI / 2)
+    );
 
-  ctxt.moveTo(p1x, p1y);
-  ctxt.lineTo(p2x, p2y);
+    ctxt.moveTo(p1x, p1y);
+    ctxt.lineTo(p2x, p2y);
 
-  ctxt.moveTo(
-    p2x + 5 * Math.cos(angle + Math.PI / 2),
-    p2y + 5 * Math.sin(angle + Math.PI / 2)
-  );
-  ctxt.lineTo(
-    p2x - 5 * Math.cos(angle + Math.PI / 2),
-    p2y - 5 * Math.sin(angle + Math.PI / 2)
-  );
-  ctxt.closePath();
-  ctxt.stroke();
+    ctxt.moveTo(
+      p2x + 5 * Math.cos(angle + Math.PI / 2),
+      p2y + 5 * Math.sin(angle + Math.PI / 2)
+    );
+    ctxt.lineTo(
+      p2x - 5 * Math.cos(angle + Math.PI / 2),
+      p2y - 5 * Math.sin(angle + Math.PI / 2)
+    );
+    ctxt.closePath();
+    ctxt.stroke();
+    ctxt.textAlign = 'center';
+    ctxt.textBaseline = 'middle';
+    ctxt.strokeText(Math.round(this.l), textCenterX, textCenterY);
+    ctxt.stroke();
+    return;
+  }
+  if (rc.showDisplacement) {
+    let fillStyle = 'yellow';
+    if (rc.displayFlicker) {
+      const f = Math.random() * 0.2 + 0.7;
+      fillStyle = `rgba(${f * 255}, ${f * 255}, ${f * 255}, ${f})`;
+    }
+    ctxt.fillStyle = fillStyle;
 
-  ctxt.textAlign = 'center';
-  ctxt.textBaseline = 'middle';
-  ctxt.strokeText(Math.round(this.l), textCenterX, textCenterY);
-  ctxt.stroke();
+    let angle = Math.atan2(this.p2.y - this.p1.y, this.p2.x - this.p1.x);
+    let dist = 0;
+    let p1x = this.p1.x + canvas.offsetX - dist * Math.cos(angle + Math.PI / 2);
+    let p1y = this.p1.y + canvas.offsetY - dist * Math.sin(angle + Math.PI / 2);
+    let p2x = this.p2.x + canvas.offsetX - dist * Math.cos(angle + Math.PI / 2);
+    let p2y = this.p2.y + canvas.offsetY - dist * Math.sin(angle + Math.PI / 2);
+
+    let textCenterX = (p1x + p2x) / 2 - dist / 2 * Math.cos(angle + Math.PI / 2);
+    let textCenterY = (p1y + p2y) / 2 - dist / 2 * Math.sin(angle + Math.PI / 2);
+      
+    const length = Math.sqrt((this.p1.x - this.p2.x)**2 + (this.p1.y - this.p2.y)**2);
+    const text = Math.round(length - this.l);
+    ctxt.font = "bold 15px sans-serif";
+    ctxt.textAlign = 'center';
+    ctxt.textBaseline = 'middle';
+    ctxt.fillText(text, textCenterX, textCenterY);
+    return;
+  }
 };
 
 Relax.geom.WeightConstraint.prototype.draw = function(canvas, rc) {

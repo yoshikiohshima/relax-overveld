@@ -88,6 +88,7 @@ export function bridgeExample(rc) {
 
     rc.backgroundColor = "#4d4d4d";
     rc.displayFlicker = true;
+    rc.showDisplacement = true;
     if (!document.body.querySelector("#weightSlider")) {
         const slider = document.createElement("input");
         slider.setAttribute("type", "range");
